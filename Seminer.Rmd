@@ -1,0 +1,11 @@
+
+
+
+
+```{r,echo=FALSE, warning=FALSE}
+
+
+
+df <- read.csv("https://raw.githubusercontent.com/fsccakir/Seminer/refs/heads/main/Kitap1.csv", stringsAsFactors = FALSE)
+
+```
