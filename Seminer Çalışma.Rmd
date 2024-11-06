@@ -1,0 +1,43 @@
+---
+title: "Vergiler İktisadi Kalkınmanın Bir Aracı Mıdır?"
+author: "Ferhat Sertaç Çakır"
+date: "2024-11-06"
+output: pdf_document
+---
+
+```{r,echo=FALSE, warning=FALSE}
+
+df <- read.csv("https://raw.githubusercontent.com/fsccakir/Seminer/refs/heads/main/Kitap1.csv", stringsAsFactors = FALSE)
+
+names(df)[names(df) == "HHI"] <- "HDI"
+
+summary(df)
+
+
+df_clean <- na.omit(df)
+
+Turkey <- df[seq(1, 61, by = 3), ]
+
+Bae <- df[seq(3, 63, by = 3), ]
+
+Swe <- df[seq(2, 62, by = 3), ]
+
+
+Bae_clean <- na.omit(Bae)
+Turkey_clean <- na.omit(Turkey)
+Swe_clean <- na.omit(Swe)
+
+```
+
+```{r,echo=FALSE, warning=FALSE}
+
+
+
+
+
+
+
+
+```
+
+
