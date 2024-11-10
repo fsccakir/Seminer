@@ -1,0 +1,137 @@
+---
+title: "Vergiler İktisadi Kalkınmanın Bir Aracı Mıdır"
+author: "Ferhat Sertaç Çakır"
+date: "2024-11-10"
+output: html_document
+---
+
+```{r,echo=FALSE, warning=FALSE}
+
+df <- read.csv("https://raw.githubusercontent.com/fsccakir/Seminer/refs/heads/main/Seminer-Veri-Seti-.csv", stringsAsFactors = FALSE)
+
+names(df)[names(df) == "HHI"] <- "HDI"
+
+summary(df)
+
+
+df_clean <- na.omit(df)
+
+Turkey <- df[seq(1, 61, by = 3), ]
+
+Bae <- df[seq(3, 63, by = 3), ]
+
+Swe <- df[seq(2, 62, by = 3), ]
+
+
+Bae_clean <- na.omit(Bae)
+Turkey_clean <- na.omit(Turkey)
+Swe_clean <- na.omit(Swe)
+
+summary(Turkey)
+
+```
+
+
+```{r,echo=FALSE, warning=FALSE}
+
+"BAE’de Vergi, Gini ve HDI Oranlarının Yıllara Göre Değişimi"
+
+library(ggplot2)
+ggplot(Bae, aes(x = Years)) +
+  geom_line(aes(y = Tax, color = "Tax Rate")) +
+  geom_line(aes(y = Gini, color = "Gini Coefficient")) +
+  geom_line(aes(y = HDI, color = "HDI")) +
+  labs(title = "BAE’de Vergi, Gini ve HDI Oranlarının Yıllara Göre Değişimi",
+       x = "Yıllar", y = "Oranlar") +
+  theme_minimal()
+
+cor_matrix <- cor(Bae[, c("Tax", "HDI", "Gini")], use = "complete.obs")
+
+cor_matrix_melted <- melt(cor_matrix)
+
+
+ggplot(cor_matrix_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(midpoint = 0, low = "blue", high = "red", mid = "white") +
+  theme_minimal() +
+  labs(title = "Korelasyon Matrisi", x = "Değişkenler", y = "Değişkenler") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+```{r,echo=FALSE, warning=FALSE}
+
+"Tr'de Gelir Vergisi ve HDI Arasındaki İlişki"
+
+library(plm)
+"Turkey HDI"
+model_tur_hdi_pool <- plm(HDI ~ Tax, data = Turkey_clean, model = "pooling", index = c("Years", "State"))
+summary(model_tur_hdi_pool)
+
+"Turkey Gini"
+model_tur_gini_pool <- plm(Gini ~ Tax, data = Turkey_clean, model = "pooling", index = c("Years", "State"))
+summary(model_tur_gini_pool)
+
+
+library(ggplot2)
+ggplot(Turkey, aes(x = Tax, y = Gini)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "Tr'de Gelir Vergisi ve Gini Arasındaki İlişki", x = "Vergi Oranı", y = "Gini")
+
+library(ggplot2)
+ggplot(Turkey, aes(x = Tax, y = HDI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "Tr'de Gelir Vergisi ve HDI Arasındaki İlişki", x = "Vergi Oranı", y = "HDI")
+
+library(ggplot2)
+library(reshape2)
+
+
+cor_matrix <- cor(Turkey[, c("Tax", "HDI", "Gini")], use = "complete.obs")
+
+cor_matrix_melted <- melt(cor_matrix)
+
+
+ggplot(cor_matrix_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(midpoint = 0, low = "blue", high = "red", mid = "white") +
+  theme_minimal() +
+  labs(title = "Korelasyon Matrisi", x = "Değişkenler", y = "Değişkenler") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+
+```{r,echo=FALSE, warning=FALSE}
+
+"İsveçte Gelir Vergisi ve HDI Arasındaki İlişki"
+
+library(plm)
+model_swe_hdi_pool <- plm(HDI ~ Tax, data = Swe_clean, model = "pooling", index = c("Years", "State"))
+summary(model_swe_hdi_pool)
+
+library(ggplot2)
+ggplot(Swe, aes(x = Tax, y = HDI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "İsveçte Gelir Vergisi ve HDI Arasındaki İlişki", x = "Vergi Oranı", y = "HDI")
+
+library(ggplot2)
+ggplot(Swe, aes(x = Tax, y = Gini)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "İsveçte Gelir Vergisi ve Gini Arasındaki İlişki", x = "Vergi Oranı", y = "Gini")
+
+cor_matrix <- cor(Swe[, c("Tax", "HDI", "Gini")], use = "complete.obs")
+
+cor_matrix_melted <- melt(cor_matrix)
+
+
+ggplot(cor_matrix_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(midpoint = 0, low = "blue", high = "red", mid = "white") +
+  theme_minimal() +
+  labs(title = "Korelasyon Matrisi", x = "Değişkenler", y = "Değişkenler") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
